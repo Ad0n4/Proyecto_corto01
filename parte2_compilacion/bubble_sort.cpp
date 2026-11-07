@@ -1,41 +1,29 @@
-// Ordenamiento de burbuja de cinco numeros.
-// Se compila para RISC-V sin depender de bibliotecas de E/S.
 
-#ifdef PRUEBA_LOCAL
 #include <iostream>
-#endif
+using namespace std;
 
-volatile int numeros[5] = {9, 2, 7, 1, 5};
+int main() {
+    int numeros[5] = {9, 5, 2, 7, 1};
+    int auxiliar;
 
-void bubble_sort(volatile int arreglo[], int longitud) {
-    for (int i = 0; i < longitud - 1; ++i) {
-        for (int j = 0; j < longitud - i - 1; ++j) {
-            int actual = arreglo[j];
-            int siguiente = arreglo[j + 1];
-
-            if (actual > siguiente) {
-                arreglo[j] = siguiente;
-                arreglo[j + 1] = actual;
+    // Ordenamiento por burbuja
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4 - i; j++) {
+            if (numeros[j] > numeros[j + 1]) {
+                auxiliar = numeros[j];
+                numeros[j] = numeros[j + 1];
+                numeros[j + 1] = auxiliar;
             }
         }
     }
-}
 
-extern "C" int main() {
-    bubble_sort(numeros, 5);
-
-#ifdef PRUEBA_LOCAL
-    std::cout << "Resultado: ";
-    for (int i = 0; i < 5; ++i) {
-        std::cout << numeros[i] << (i == 4 ? '\n' : ' ');
+    // Mostrar arreglo ordenado
+    for (int i = 0; i < 5; i++) {
+        cout << numeros[i] << " ";
     }
-#endif
 
-    const int esperado[5] = {1, 2, 5, 7, 9};
-    for (int i = 0; i < 5; ++i) {
-        if (numeros[i] != esperado[i]) {
-            return 1;
-        }
-    }
+    cout << endl;
+
     return 0;
 }
+

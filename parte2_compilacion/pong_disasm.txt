@@ -1,0 +1,432 @@
+
+pong.o:     file format elf32-littleriscv
+
+
+Disassembly of section .text:
+
+00000000 <main_loop-0x84>:
+   0:	00000413          	li	s0,0
+   4:	02000493          	li	s1,32
+   8:	02000913          	li	s2,32
+   c:	00000a93          	li	s5,0
+  10:	00195293          	srli	t0,s2,0x1
+  14:	fff28293          	addi	t0,t0,-1
+  18:	00028993          	mv	s3,t0
+  1c:	00028a13          	mv	s4,t0
+  20:	00000b13          	li	s6,0
+  24:	00000b93          	li	s7,0
+  28:	00000c13          	li	s8,0
+  2c:	00000c93          	li	s9,0
+  30:	0014dd13          	srli	s10,s1,0x1
+  34:	00195d93          	srli	s11,s2,0x1
+  38:	00100813          	li	a6,1
+  3c:	00100893          	li	a7,1
+  40:	00000793          	li	a5,0
+  44:	00000693          	li	a3,0
+  48:	00000713          	li	a4,0
+  4c:	3e0000ef          	jal	ra,42c <draw_scores>
+  50:	00100513          	li	a0,1
+  54:	00098593          	mv	a1,s3
+  58:	0ff00613          	li	a2,255
+  5c:	460000ef          	jal	ra,4bc <draw_paddle>
+  60:	ffe48513          	addi	a0,s1,-2
+  64:	000a0593          	mv	a1,s4
+  68:	0ff00613          	li	a2,255
+  6c:	450000ef          	jal	ra,4bc <draw_paddle>
+  70:	000d0513          	mv	a0,s10
+  74:	000d8593          	mv	a1,s11
+  78:	01000637          	lui	a2,0x1000
+  7c:	fff60613          	addi	a2,a2,-1 # ffffff <put_pixel+0xfffadb>
+  80:	4a4000ef          	jal	ra,524 <put_pixel>
+
+00000084 <main_loop>:
+  84:	000aa283          	lw	t0,0(s5)
+  88:	02028e63          	beqz	t0,c4 <up_released>
+  8c:	020b1e63          	bnez	s6,c8 <check_left>
+  90:	00100b13          	li	s6,1
+  94:	00100313          	li	t1,1
+  98:	03335863          	bge	t1,s3,c8 <check_left>
+  9c:	00100513          	li	a0,1
+  a0:	00098593          	mv	a1,s3
+  a4:	00000613          	li	a2,0
+  a8:	414000ef          	jal	ra,4bc <draw_paddle>
+  ac:	fff98993          	addi	s3,s3,-1
+  b0:	00100513          	li	a0,1
+  b4:	00098593          	mv	a1,s3
+  b8:	0ff00613          	li	a2,255
+  bc:	400000ef          	jal	ra,4bc <draw_paddle>
+  c0:	0080006f          	j	c8 <check_left>
+
+000000c4 <up_released>:
+  c4:	00000b13          	li	s6,0
+
+000000c8 <check_left>:
+  c8:	008aa283          	lw	t0,8(s5)
+  cc:	02028e63          	beqz	t0,108 <left_released>
+  d0:	020b9e63          	bnez	s7,10c <check_right>
+  d4:	00100b93          	li	s7,1
+  d8:	ffd90313          	addi	t1,s2,-3
+  dc:	0269d863          	bge	s3,t1,10c <check_right>
+  e0:	00100513          	li	a0,1
+  e4:	00098593          	mv	a1,s3
+  e8:	00000613          	li	a2,0
+  ec:	3d0000ef          	jal	ra,4bc <draw_paddle>
+  f0:	00198993          	addi	s3,s3,1
+  f4:	00100513          	li	a0,1
+  f8:	00098593          	mv	a1,s3
+  fc:	0ff00613          	li	a2,255
+ 100:	3bc000ef          	jal	ra,4bc <draw_paddle>
+ 104:	0080006f          	j	10c <check_right>
+
+00000108 <left_released>:
+ 108:	00000b93          	li	s7,0
+
+0000010c <check_right>:
+ 10c:	00caa283          	lw	t0,12(s5)
+ 110:	02028e63          	beqz	t0,14c <right_released>
+ 114:	020c1e63          	bnez	s8,150 <check_down>
+ 118:	00100c13          	li	s8,1
+ 11c:	00100313          	li	t1,1
+ 120:	03435863          	bge	t1,s4,150 <check_down>
+ 124:	ffe48513          	addi	a0,s1,-2
+ 128:	000a0593          	mv	a1,s4
+ 12c:	00000613          	li	a2,0
+ 130:	38c000ef          	jal	ra,4bc <draw_paddle>
+ 134:	fffa0a13          	addi	s4,s4,-1
+ 138:	ffe48513          	addi	a0,s1,-2
+ 13c:	000a0593          	mv	a1,s4
+ 140:	0ff00613          	li	a2,255
+ 144:	378000ef          	jal	ra,4bc <draw_paddle>
+ 148:	0080006f          	j	150 <check_down>
+
+0000014c <right_released>:
+ 14c:	00000c13          	li	s8,0
+
+00000150 <check_down>:
+ 150:	004aa283          	lw	t0,4(s5)
+ 154:	02028e63          	beqz	t0,190 <down_released>
+ 158:	020c9e63          	bnez	s9,194 <update_ball>
+ 15c:	00100c93          	li	s9,1
+ 160:	ffd90313          	addi	t1,s2,-3
+ 164:	026a5863          	bge	s4,t1,194 <update_ball>
+ 168:	ffe48513          	addi	a0,s1,-2
+ 16c:	000a0593          	mv	a1,s4
+ 170:	00000613          	li	a2,0
+ 174:	348000ef          	jal	ra,4bc <draw_paddle>
+ 178:	001a0a13          	addi	s4,s4,1
+ 17c:	ffe48513          	addi	a0,s1,-2
+ 180:	000a0593          	mv	a1,s4
+ 184:	0ff00613          	li	a2,255
+ 188:	334000ef          	jal	ra,4bc <draw_paddle>
+ 18c:	0080006f          	j	194 <update_ball>
+
+00000190 <down_released>:
+ 190:	00000c93          	li	s9,0
+
+00000194 <update_ball>:
+ 194:	00178793          	addi	a5,a5,1
+ 198:	0c800293          	li	t0,200
+ 19c:	ee57c4e3          	blt	a5,t0,84 <main_loop>
+ 1a0:	00000793          	li	a5,0
+ 1a4:	000d0513          	mv	a0,s10
+ 1a8:	000d8593          	mv	a1,s11
+ 1ac:	00000613          	li	a2,0
+ 1b0:	374000ef          	jal	ra,524 <put_pixel>
+ 1b4:	00100293          	li	t0,1
+ 1b8:	005d9663          	bne	s11,t0,1c4 <check_bottom>
+ 1bc:	0008d463          	bgez	a7,1c4 <check_bottom>
+ 1c0:	00100893          	li	a7,1
+
+000001c4 <check_bottom>:
+ 1c4:	fff90293          	addi	t0,s2,-1
+ 1c8:	005d9663          	bne	s11,t0,1d4 <check_left_paddle>
+ 1cc:	01105463          	blez	a7,1d4 <check_left_paddle>
+ 1d0:	fff00893          	li	a7,-1
+
+000001d4 <check_left_paddle>:
+ 1d4:	00200293          	li	t0,2
+ 1d8:	025d1e63          	bne	s10,t0,214 <check_right_paddle>
+ 1dc:	02085c63          	bgez	a6,214 <check_right_paddle>
+ 1e0:	073dca63          	blt	s11,s3,254 <point_for_right>
+ 1e4:	00298313          	addi	t1,s3,2
+ 1e8:	07b34663          	blt	t1,s11,254 <point_for_right>
+ 1ec:	00100813          	li	a6,1
+ 1f0:	013d8a63          	beq	s11,s3,204 <left_hit_top>
+ 1f4:	00198313          	addi	t1,s3,1
+ 1f8:	006d8a63          	beq	s11,t1,20c <left_hit_middle>
+
+000001fc <left_hit_bottom>:
+ 1fc:	00100893          	li	a7,1
+ 200:	0bc0006f          	j	2bc <move_ball>
+
+00000204 <left_hit_top>:
+ 204:	fff00893          	li	a7,-1
+ 208:	0b40006f          	j	2bc <move_ball>
+
+0000020c <left_hit_middle>:
+ 20c:	00000893          	li	a7,0
+ 210:	0ac0006f          	j	2bc <move_ball>
+
+00000214 <check_right_paddle>:
+ 214:	ffd48293          	addi	t0,s1,-3
+ 218:	0a5d1263          	bne	s10,t0,2bc <move_ball>
+ 21c:	0b005063          	blez	a6,2bc <move_ball>
+ 220:	054dce63          	blt	s11,s4,27c <point_for_left>
+ 224:	002a0313          	addi	t1,s4,2
+ 228:	05b34a63          	blt	t1,s11,27c <point_for_left>
+ 22c:	fff00813          	li	a6,-1
+ 230:	014d8a63          	beq	s11,s4,244 <right_hit_top>
+ 234:	001a0313          	addi	t1,s4,1
+ 238:	006d8a63          	beq	s11,t1,24c <right_hit_middle>
+
+0000023c <right_hit_bottom>:
+ 23c:	00100893          	li	a7,1
+ 240:	07c0006f          	j	2bc <move_ball>
+
+00000244 <right_hit_top>:
+ 244:	fff00893          	li	a7,-1
+ 248:	0740006f          	j	2bc <move_ball>
+
+0000024c <right_hit_middle>:
+ 24c:	00000893          	li	a7,0
+ 250:	06c0006f          	j	2bc <move_ball>
+
+00000254 <point_for_right>:
+ 254:	00170713          	addi	a4,a4,1
+ 258:	00500293          	li	t0,5
+ 25c:	08575863          	bge	a4,t0,2ec <player2_wins>
+ 260:	1cc000ef          	jal	ra,42c <draw_scores>
+ 264:	0014dd13          	srli	s10,s1,0x1
+ 268:	00195d93          	srli	s11,s2,0x1
+ 26c:	fff00813          	li	a6,-1
+ 270:	00100893          	li	a7,1
+ 274:	00000793          	li	a5,0
+ 278:	02c0006f          	j	2a4 <draw_reset_ball>
+
+0000027c <point_for_left>:
+ 27c:	00168693          	addi	a3,a3,1
+ 280:	00500293          	li	t0,5
+ 284:	0456dc63          	bge	a3,t0,2dc <player1_wins>
+ 288:	1a4000ef          	jal	ra,42c <draw_scores>
+ 28c:	0014dd13          	srli	s10,s1,0x1
+ 290:	00195d93          	srli	s11,s2,0x1
+ 294:	00100813          	li	a6,1
+ 298:	fff00893          	li	a7,-1
+ 29c:	00000793          	li	a5,0
+ 2a0:	0040006f          	j	2a4 <draw_reset_ball>
+
+000002a4 <draw_reset_ball>:
+ 2a4:	000d0513          	mv	a0,s10
+ 2a8:	000d8593          	mv	a1,s11
+ 2ac:	01000637          	lui	a2,0x1000
+ 2b0:	fff60613          	addi	a2,a2,-1 # ffffff <put_pixel+0xfffadb>
+ 2b4:	270000ef          	jal	ra,524 <put_pixel>
+ 2b8:	dcdff06f          	j	84 <main_loop>
+
+000002bc <move_ball>:
+ 2bc:	010d0d33          	add	s10,s10,a6
+ 2c0:	011d8db3          	add	s11,s11,a7
+ 2c4:	000d0513          	mv	a0,s10
+ 2c8:	000d8593          	mv	a1,s11
+ 2cc:	01000637          	lui	a2,0x1000
+ 2d0:	fff60613          	addi	a2,a2,-1 # ffffff <put_pixel+0xfffadb>
+ 2d4:	250000ef          	jal	ra,524 <put_pixel>
+ 2d8:	dadff06f          	j	84 <main_loop>
+
+000002dc <player1_wins>:
+ 2dc:	00010537          	lui	a0,0x10
+ 2e0:	f0050513          	addi	a0,a0,-256 # ff00 <put_pixel+0xf9dc>
+ 2e4:	0b4000ef          	jal	ra,398 <fill_screen>
+ 2e8:	0100006f          	j	2f8 <wait_restart>
+
+000002ec <player2_wins>:
+ 2ec:	00ff0537          	lui	a0,0xff0
+ 2f0:	0a8000ef          	jal	ra,398 <fill_screen>
+ 2f4:	0040006f          	j	2f8 <wait_restart>
+
+000002f8 <wait_restart>:
+ 2f8:	000aa283          	lw	t0,0(s5)
+ 2fc:	02029063          	bnez	t0,31c <restart_game>
+ 300:	004aa283          	lw	t0,4(s5)
+ 304:	00029c63          	bnez	t0,31c <restart_game>
+ 308:	008aa283          	lw	t0,8(s5)
+ 30c:	00029863          	bnez	t0,31c <restart_game>
+ 310:	00caa283          	lw	t0,12(s5)
+ 314:	00029463          	bnez	t0,31c <restart_game>
+ 318:	fe1ff06f          	j	2f8 <wait_restart>
+
+0000031c <restart_game>:
+ 31c:	0cc000ef          	jal	ra,3e8 <clear_screen>
+ 320:	00000693          	li	a3,0
+ 324:	00000713          	li	a4,0
+ 328:	00000b13          	li	s6,0
+ 32c:	00000b93          	li	s7,0
+ 330:	00000c13          	li	s8,0
+ 334:	00000c93          	li	s9,0
+ 338:	00195293          	srli	t0,s2,0x1
+ 33c:	fff28293          	addi	t0,t0,-1
+ 340:	00028993          	mv	s3,t0
+ 344:	00028a13          	mv	s4,t0
+ 348:	0014dd13          	srli	s10,s1,0x1
+ 34c:	00195d93          	srli	s11,s2,0x1
+ 350:	00100813          	li	a6,1
+ 354:	00100893          	li	a7,1
+ 358:	00000793          	li	a5,0
+ 35c:	0d0000ef          	jal	ra,42c <draw_scores>
+ 360:	00100513          	li	a0,1
+ 364:	00098593          	mv	a1,s3
+ 368:	0ff00613          	li	a2,255
+ 36c:	150000ef          	jal	ra,4bc <draw_paddle>
+ 370:	ffe48513          	addi	a0,s1,-2
+ 374:	000a0593          	mv	a1,s4
+ 378:	0ff00613          	li	a2,255
+ 37c:	140000ef          	jal	ra,4bc <draw_paddle>
+ 380:	000d0513          	mv	a0,s10
+ 384:	000d8593          	mv	a1,s11
+ 388:	01000637          	lui	a2,0x1000
+ 38c:	fff60613          	addi	a2,a2,-1 # ffffff <put_pixel+0xfffadb>
+ 390:	194000ef          	jal	ra,524 <put_pixel>
+ 394:	cf1ff06f          	j	84 <main_loop>
+
+00000398 <fill_screen>:
+ 398:	ff010113          	addi	sp,sp,-16
+ 39c:	00112623          	sw	ra,12(sp)
+ 3a0:	01612423          	sw	s6,8(sp)
+ 3a4:	00050b13          	mv	s6,a0
+ 3a8:	00000e13          	li	t3,0
+
+000003ac <fill_row>:
+ 3ac:	032e5663          	bge	t3,s2,3d8 <fill_done>
+ 3b0:	00000e93          	li	t4,0
+
+000003b4 <fill_column>:
+ 3b4:	009ede63          	bge	t4,s1,3d0 <next_fill_row>
+ 3b8:	000e8513          	mv	a0,t4
+ 3bc:	000e0593          	mv	a1,t3
+ 3c0:	000b0613          	mv	a2,s6
+ 3c4:	160000ef          	jal	ra,524 <put_pixel>
+ 3c8:	001e8e93          	addi	t4,t4,1
+ 3cc:	fe9ff06f          	j	3b4 <fill_column>
+
+000003d0 <next_fill_row>:
+ 3d0:	001e0e13          	addi	t3,t3,1
+ 3d4:	fd9ff06f          	j	3ac <fill_row>
+
+000003d8 <fill_done>:
+ 3d8:	00812b03          	lw	s6,8(sp)
+ 3dc:	00c12083          	lw	ra,12(sp)
+ 3e0:	01010113          	addi	sp,sp,16
+ 3e4:	00008067          	ret
+
+000003e8 <clear_screen>:
+ 3e8:	ff010113          	addi	sp,sp,-16
+ 3ec:	00112623          	sw	ra,12(sp)
+ 3f0:	00000e13          	li	t3,0
+
+000003f4 <clear_row>:
+ 3f4:	032e5663          	bge	t3,s2,420 <clear_done>
+ 3f8:	00000e93          	li	t4,0
+
+000003fc <clear_column>:
+ 3fc:	009ede63          	bge	t4,s1,418 <next_clear_row>
+ 400:	000e8513          	mv	a0,t4
+ 404:	000e0593          	mv	a1,t3
+ 408:	00000613          	li	a2,0
+ 40c:	118000ef          	jal	ra,524 <put_pixel>
+ 410:	001e8e93          	addi	t4,t4,1
+ 414:	fe9ff06f          	j	3fc <clear_column>
+
+00000418 <next_clear_row>:
+ 418:	001e0e13          	addi	t3,t3,1
+ 41c:	fd9ff06f          	j	3f4 <clear_row>
+
+00000420 <clear_done>:
+ 420:	00c12083          	lw	ra,12(sp)
+ 424:	01010113          	addi	sp,sp,16
+ 428:	00008067          	ret
+
+0000042c <draw_scores>:
+ 42c:	ff010113          	addi	sp,sp,-16
+ 430:	00112623          	sw	ra,12(sp)
+ 434:	00000e13          	li	t3,0
+
+00000438 <clear_score_row>:
+ 438:	009e5e63          	bge	t3,s1,454 <draw_left_score>
+ 43c:	000e0513          	mv	a0,t3
+ 440:	00000593          	li	a1,0
+ 444:	00000613          	li	a2,0
+ 448:	0dc000ef          	jal	ra,524 <put_pixel>
+ 44c:	001e0e13          	addi	t3,t3,1
+ 450:	fe9ff06f          	j	438 <clear_score_row>
+
+00000454 <draw_left_score>:
+ 454:	00000e13          	li	t3,0
+
+00000458 <left_score_loop>:
+ 458:	02de5663          	bge	t3,a3,484 <draw_right_score>
+ 45c:	00500f13          	li	t5,5
+ 460:	03ee5263          	bge	t3,t5,484 <draw_right_score>
+ 464:	00400e93          	li	t4,4
+ 468:	01ce8533          	add	a0,t4,t3
+ 46c:	00000593          	li	a1,0
+ 470:	00010637          	lui	a2,0x10
+ 474:	f0060613          	addi	a2,a2,-256 # ff00 <put_pixel+0xf9dc>
+ 478:	0ac000ef          	jal	ra,524 <put_pixel>
+ 47c:	001e0e13          	addi	t3,t3,1
+ 480:	fd9ff06f          	j	458 <left_score_loop>
+
+00000484 <draw_right_score>:
+ 484:	00000e13          	li	t3,0
+
+00000488 <right_score_loop>:
+ 488:	02ee5463          	bge	t3,a4,4b0 <score_done>
+ 48c:	00500f13          	li	t5,5
+ 490:	03ee5063          	bge	t3,t5,4b0 <score_done>
+ 494:	ffb48e93          	addi	t4,s1,-5
+ 498:	41ce8533          	sub	a0,t4,t3
+ 49c:	00000593          	li	a1,0
+ 4a0:	00ff0637          	lui	a2,0xff0
+ 4a4:	080000ef          	jal	ra,524 <put_pixel>
+ 4a8:	001e0e13          	addi	t3,t3,1
+ 4ac:	fddff06f          	j	488 <right_score_loop>
+
+000004b0 <score_done>:
+ 4b0:	00c12083          	lw	ra,12(sp)
+ 4b4:	01010113          	addi	sp,sp,16
+ 4b8:	00008067          	ret
+
+000004bc <draw_paddle>:
+ 4bc:	ff010113          	addi	sp,sp,-16
+ 4c0:	00112623          	sw	ra,12(sp)
+ 4c4:	01612423          	sw	s6,8(sp)
+ 4c8:	01712223          	sw	s7,4(sp)
+ 4cc:	01812023          	sw	s8,0(sp)
+ 4d0:	00050b13          	mv	s6,a0
+ 4d4:	00058b93          	mv	s7,a1
+ 4d8:	00060c13          	mv	s8,a2
+ 4dc:	000b0513          	mv	a0,s6
+ 4e0:	000b8593          	mv	a1,s7
+ 4e4:	000c0613          	mv	a2,s8
+ 4e8:	03c000ef          	jal	ra,524 <put_pixel>
+ 4ec:	000b0513          	mv	a0,s6
+ 4f0:	001b8593          	addi	a1,s7,1
+ 4f4:	000c0613          	mv	a2,s8
+ 4f8:	02c000ef          	jal	ra,524 <put_pixel>
+ 4fc:	000b0513          	mv	a0,s6
+ 500:	002b8593          	addi	a1,s7,2
+ 504:	000c0613          	mv	a2,s8
+ 508:	01c000ef          	jal	ra,524 <put_pixel>
+ 50c:	00012c03          	lw	s8,0(sp)
+ 510:	00412b83          	lw	s7,4(sp)
+ 514:	00812b03          	lw	s6,8(sp)
+ 518:	00c12083          	lw	ra,12(sp)
+ 51c:	01010113          	addi	sp,sp,16
+ 520:	00008067          	ret
+
+00000524 <put_pixel>:
+ 524:	029583b3          	mul	t2,a1,s1
+ 528:	00a383b3          	add	t2,t2,a0
+ 52c:	00239393          	slli	t2,t2,0x2
+ 530:	007403b3          	add	t2,s0,t2
+ 534:	00c3a023          	sw	a2,0(t2)
+ 538:	00008067          	ret

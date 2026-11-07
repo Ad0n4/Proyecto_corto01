@@ -1,87 +1,76 @@
-# Parte 2 - Compilacion mediante scripting
 
-Esta carpeta contiene el programa Bubble Sort de cinco elementos en C++ y un script para compilarlo a RISC-V. El mismo script ensambla y enlaza `../parte1_pong/pong.s` del repositorio.
+# Parte 2 - Compilación RISC-V
 
-## Archivos
+## Descripción
 
-- `bubble_sort.cpp`: ordena el arreglo `{9, 2, 7, 1, 5}` y comprueba el resultado `{1, 2, 5, 7, 9}`.
-- `compilar_riscv.sh`: genera codigo ensamblador, objetos, ELF, binarios y desensamblados en `build/`.
-- `.gitignore`: evita subir archivos intermedios accidentalmente.
+Compilación de dos programas para la arquitectura RISC-V de 32 bits utilizando herramientas GNU y un script de Bash en Red Hat Enterprise Linux.
 
-## Uso en el servidor del curso
+## Programas
 
-El profesor debe crear una cuenta en el servidor Red Hat. La carpeta de trabajo indicada en el enunciado es:
+### Bubble Sort
 
-```text
-/mnt/vol_NFS_rh003/Est_Digitales_2S_2026/<usuario>/
-```
+Programa en C++ que implementa el algoritmo de ordenamiento por burbuja sobre un arreglo de cinco elementos.
 
-El toolchain esta en `/mnt/vol_NFS_rh003/Est_Digitales_2S_2026/tools_riscv`. En cada terminal nueva se carga el entorno con:
+Arreglo original: 9, 5, 2, 7, 1
 
-```bash
-source /mnt/vol_NFS_rh003/Est_Digitales_2S_2026/tools_riscv/riscv_tools_setup.sh
-```
+Arreglo ordenado: 1, 2, 5, 7, 9
 
-Desde la carpeta del proyecto, ejecute:
+### Pong
 
-```bash
-cd parte2_compilacion
-bash compilar_riscv.sh
-```
+Programa en ensamblador RISC-V correspondiente a la Parte 1 del proyecto.
 
-El script busca automaticamente compiladores `riscv64-unknown-elf-`, `riscv32-unknown-elf-`, `riscv64-linux-gnu-` o `riscv32-linux-gnu-`. Si la instalacion usa otro nombre, es posible indicar por ejemplo `RISCV_PREFIX=riscv64-unknown-elf- bash compilar_riscv.sh` (sustituyendo el prefijo por el real). Por defecto se generan instrucciones `rv32im` con ABI `ilp32`, parametros ajustables con `RISCV_ARCH` y `RISCV_ABI`.
+Para el ensamblado fuera de Ripes se utilizan valores provisionales para las constantes de los periféricos. El archivo objeto generado demuestra la traducción a código máquina, pero no permite ejecutar el juego directamente en Red Hat.
 
-## Resultados esperados
+## Herramientas utilizadas
 
-| Archivo | Proposito |
-|---|---|
-| `build/bubble_sort_generado.s` | Ensamblador producido por el compilador de C++. |
-| `build/bubble_sort.o` | Codigo maquina RISC-V en formato ELF relocatable. |
-| `build/bubble_sort.elf` | Archivo ELF enlazado, sin entorno de ejecucion. |
-| `build/bubble_sort.bin` | Imagen binaria de las secciones cargables. |
-| `build/bubble_sort_desensamblado.txt` | Desensamblado de instrucciones. |
-| `build/pong_para_toolchain.s` | Copia adaptada para GNU assembler; el original no cambia. |
-| `build/pong.o`, `build/pong.elf`, `build/pong.bin` | Productos de la compilacion de Pong. |
-| `build/pong_desensamblado.txt` | Desensamblado del juego. |
+- Red Hat Enterprise Linux 8
+- GNU RISC-V Toolchain de 32 bits
+- GCC/G++ 12.1.0
+- GNU Assembler
+- GNU Objdump
+- GNU Objcopy
+- Bash
 
-Para comprobar la arquitectura:
+## Compilación
+
+Configurar las herramientas:
 
 ```bash
-file build/bubble_sort.elf build/pong.elf
+export RISCV=/opt/riscv
+export PATH="$RISCV/bin:$PATH"
 ```
 
-Si se dispone de `readelf`:
+Ejecutar el script:
 
 ```bash
-readelf -h build/bubble_sort.elf
-readelf -h build/pong.elf
+chmod +x compilar_riscv.sh
+./compilar_riscv.sh
 ```
 
-Los ELF se enlazan sin biblioteca de inicio ni sistema operativo porque el objetivo es **generar y examinar codigo maquina**, no ejecutarlos como programas de Linux.
+El script compila ambos programas automáticamente.
 
-## Prueba opcional en Linux local
+## Archivos generados
 
-Para ver la salida ordenada en una PC que tenga `g++` convencional:
+### Bubble Sort
 
-```bash
-g++ -std=c++17 -DPRUEBA_LOCAL bubble_sort.cpp -o burbuja_local
-./burbuja_local
-```
+- `bubble_sort.cpp`: código fuente en C++.
+- `bubble_sort.s`: ensamblador generado.
+- `bubble_sort.o`: archivo objeto RISC-V.
+- `bubble_sort.elf`: ejecutable ELF.
+- `bubble_sort.bin`: código máquina binario.
+- `bubble_sort_disasm.txt`: desensamblado.
 
-Salida esperada:
+### Pong
 
-```text
-Resultado: 1 2 5 7 9
-```
+- `pong.s`: código fuente en ensamblador.
+- `pong.o`: archivo objeto RISC-V.
+- `pong_disasm.txt`: desensamblado.
 
-## Nota importante sobre Pong y Snake
+## Resultados
 
-El enunciado de la Parte 1 solicita `Pong`, pero el ultimo punto de la Parte 2 menciona `Snake`. Este material toma el **Pong construido en la Parte 1** como el programa ensamblador a compilar. Se recomienda confirmar con el profesor si la palabra `Snake` fue un error o si desea un programa distinto.
+Ambos programas fueron compilados correctamente mediante el script `compilar_riscv.sh`.
 
-Asimismo, los identificadores `LED_MATRIX_0_BASE`, `D_PAD_0_BASE`, `LED_MATRIX_0_WIDTH` y `LED_MATRIX_0_HEIGHT` son especificos de Ripes. Para que GNU assembler pueda convertir las instrucciones a codigo maquina, el script crea una copia con constantes de sustitucion (direcciones base `0`, dimensiones `32x32` por defecto). **Son valores de relleno para compilar, no direcciones verificadas ni una configuracion ejecutable en Red Hat.** Para representar la configuracion real de Ripes deberan indicarse las constantes verdaderas, por ejemplo:
+Se verificó que los archivos objeto corresponden a la arquitectura RISC-V de 32 bits y que contienen las instrucciones de máquina generadas.
 
-```bash
-LED_MATRIX_BASE=0x... LED_MATRIX_WIDTH=... LED_MATRIX_HEIGHT=... D_PAD_BASE=0x... bash compilar_riscv.sh
-```
+La ejecución de Bubble Sort en un simulador RISC-V queda pendiente de verificar.
 
-No se pretende ejecutar el Pong como una aplicacion Linux convencional: su entrada/salida se realiza mediante perifericos mapeados en memoria por Ripes. El archivo `parte1_pong/pong.s` se conserva como fuente original del juego.
